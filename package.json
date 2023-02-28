@@ -1,0 +1,26 @@
+{
+  "name": "msdf-fonts",
+  "version": "1.0.0",
+  "description": "MSDF files typically used for frontend rendering of text in WebGL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kalegd/msdf-fonts.git"
+  },
+  "keywords": [
+    "msdf"
+  ],
+  "author": "",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/kalegd/msdf-fonts/issues"
+  },
+  "homepage": "https://github.com/kalegd/msdf-fonts#readme",
+  "dependencies": {
+    "msdf-bmfont-xml": "^2.7.0"
+  }
+}
