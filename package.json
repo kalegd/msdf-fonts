@@ -1,6 +1,6 @@
 {
   "name": "msdf-fonts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MSDF files typically used for frontend rendering of text in WebGL",
   "main": "index.js",
   "scripts": {
