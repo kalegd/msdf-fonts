@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/kalegd/msdf-fonts#readme",
   "dependencies": {
-    "msdf-bmfont-xml": "^2.7.0"
+    "msdf-bmfont-xml": "^2.7.0",
+    "opentype.js": "^1.3.4"
   }
 }

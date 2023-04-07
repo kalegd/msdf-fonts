@@ -1,5 +1,6 @@
 const fs = require('fs');
 const generateBMFont = require('msdf-bmfont-xml');
+const opentype = require('opentype.js');
 const CharacterSets = require('./CharacterSets.js');
 const CustomCharacterSets = require('./CustomCharacterSets.js');
 const FontFamilies = require('./FontFamilies.js');
@@ -17,6 +18,15 @@ function updateCharacterParams(json, character, updates) {
         }
     }
     throw new Error('Character not found for updates');
+}
+
+function getCharsetFromGlyphs(glyphs) {
+    let characters = [];
+    for(let id in glyphs) {
+        let unicode = glyphs[id].unicode;
+        if(unicode) characters.push(String.fromCodePoint(unicode));
+    }
+    return characters;
 }
 
 function _generateFont(ttf, folder, params, overrides, resizeIndex, resolve, reject) {
@@ -81,17 +91,15 @@ async function buildCustom() {
         + '/fonts/opensans/OpenSans-Regular.ttf');
     let robotoRegularTTF = fs.readFileSync(__dirname
         + '/fonts/roboto/Roboto-Regular.ttf');
-    let digitalBaconFolder = __dirname + '/build/custom/digitalbacon/opensans/';
-    let threeMeshUIFolder = __dirname + '/build/custom/three-mesh-ui/roboto/';
-    fs.mkdirSync(digitalBaconFolder, { recursive: true});
-    fs.mkdirSync(threeMeshUIFolder, { recursive: true});
+    let folder = __dirname + '/build/custom/';
+    fs.mkdirSync(folder, { recursive: true});
     try {
-        await generateFont(openSansRegularTTF, digitalBaconFolder,
-            'OpenSans-Regular-digitalbacon-msdf',
+        await generateFont(openSansRegularTTF, folder,
+            'digitalbacon-OpenSans-Regular-msdf',
             CustomCharacterSets['digitalbacon'],
             [{ character: '|', params: { xoffset: 2, xadvance: 11 }}]);
-        await generateFont(robotoRegularTTF, threeMeshUIFolder,
-            'Roboto-Regular-three-mesh-ui-msdf',
+        await generateFont(robotoRegularTTF, folder,
+            'three-mesh-ui-Roboto-Regular-msdf',
             CustomCharacterSets['three-mesh-ui']);
     } catch(err) {
         console.error(err);
@@ -99,20 +107,19 @@ async function buildCustom() {
     }
 }
 
-async function build() {
+async function buildSubsets() {
     for(let charsetFolder in CharacterSets) {
-        let directory = __dirname + '/build/' + charsetFolder;
         let charset = CharacterSets[charsetFolder];
         for(let family of charset.fontFamilies) {
-            let msdfFolder = directory + '/' + family + '/';
+            let msdfFolder = __dirname + '/build/subsets/';
             fs.mkdirSync(msdfFolder, { recursive: true});
             let fontNames = FontFamilies[family];
             for(let fontName of fontNames) {
                 let ttf = fs.readFileSync(__dirname + '/fonts/' + family + '/'
                     + fontName + '.ttf');
                 try {
-                    await generateFont(ttf, msdfFolder, fontName + '-'
-                        + charsetFolder + '-msdf', charset.characters);
+                    await generateFont(ttf, msdfFolder, charsetFolder + '-'
+                        + fontName + '-msdf', charset.characters);
                 } catch(err) {
                     console.error(err);
                     return;
@@ -122,4 +129,27 @@ async function build() {
     }
 }
 
-build().then(() => { buildCustom(); }).then(() => { console.log("Finished"); });
+async function build() {
+    for(let family in FontFamilies) {
+        let fontNames = FontFamilies[family];
+        for(let fontName of fontNames) {
+            let ttfPath = __dirname + '/fonts/' + family + '/' + fontName
+                + '.ttf';
+            let msdfFolder = __dirname + '/build/';
+            fs.mkdirSync(msdfFolder, { recursive: true});
+            let ttf = fs.readFileSync(ttfPath);
+            let fontInfo = opentype.loadSync(ttfPath);
+            let charset = getCharsetFromGlyphs(fontInfo.glyphs.glyphs);
+            try {
+                await generateFont(ttf, msdfFolder, fontName + '-msdf',charset);
+            } catch(err) {
+                console.error(err);
+                return;
+            }
+        }
+    }
+    await buildSubsets();
+    await buildCustom();
+}
+
+build().then(() => { console.log("Finished"); });

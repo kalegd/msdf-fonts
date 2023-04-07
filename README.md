@@ -3,17 +3,14 @@ Repository for MSDF font files for rendering 2D text in WebGL
 To learn more about MSDF, see this repo https://github.com/Chlumsky/msdfgen
 
 #### How to use
-In your application code, use any CDN for Open Source Projects like jsdelivr or cdnjs to reference your desired font
+In your application code, use any CDN for Open Source Projects like jsdelivr or cdnjs to reference your desired font. You can access the full font files under `/build/`, or subsets of characters based on Unicode Blocks under `/build/subsets/` if you want to load smaller files
 ```javascript
-let fontJSON = "https://cdn.jsdelivr.net/npm/msdf-fonts/build/basic-latin/opensans/OpenSans-Regular-basic-latin-msdf.json";
-let fontImage = "https://cdn.jsdelivr.net/npm/msdf-fonts/build/basic-latin/opensans/OpenSans-Regular-basic-latin-msdf.png";
+let fontJSON = "https://cdn.jsdelivr.net/npm/msdf-fonts/build/OpenSans-Regular-msdf.json";
+let fontImage = "https://cdn.jsdelivr.net/npm/msdf-fonts/build/OpenSans-Regular-msdf.png";
 ```
 
-Files are structured in the `/build` folder as follows
-`/{characterSet}/{fontFamilyLowerCase}/{fontFamily}-{weight+style}-{characterSet}-msdf.{png|json}`
-
-#### Character Sets
-The following Character Sets are currently supported
+#### Character Subsets
+The following Character Subsets are currently supported if you want to load smaller files. These files are located in the `/build` folder as follows: `/build/subsets/{characterSet}-{fontFamily}-{weight+style}-msdf.{png|json}`
 |Character Set Name|Includes|List of Characters|
 |---|---|---|
 |basic-latin||`` !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{\|}~``|
@@ -26,7 +23,7 @@ The following Character Sets are currently supported
 * Create a folder for the new font family in all lowercase under `/fonts`
 * Add all your .ttf files to that new folder
 * Add the name of the font folder to `FontFamilies.js` in the `fontFolders` list
-* Add your font folder name to the relavant Character Sets in `CharacterSets.js`
+* (Optionally) Add your font folder name to the relavant Character Sets in `CharacterSets.js`
 * Run `npm start`
 * Open a pull request :)
 
