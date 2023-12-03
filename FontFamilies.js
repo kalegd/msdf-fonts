@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-let fontFolders = ['roboto', 'opensans'];
+let fontFolders = ['notosansdevanagari', 'roboto', 'opensans'];
 
 const FontFamilies = {};
 

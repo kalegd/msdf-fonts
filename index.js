@@ -80,6 +80,9 @@ async function generateFont(ttf, folder, filename, charset, overrides) {
         pot: true,
         charset: charset,
     };
+    let path = folder + filename;
+    if(fs.existsSync(path + '.png') && fs.existsSync(path + '.json'))
+        return Promise.resolve();
     return new Promise((resolve, reject) => {
         _generateFont(ttf, folder, params, overrides, 0, resolve,
             reject);
